@@ -1,0 +1,85 @@
+.boardContainer {
+  height: 100%;
+  width: 100%;
+  flex: 1 1 auto;
+  /* background: gray; */
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  flex-flow: center;
+  align-items: center;
+}
+
+.leftPanel {
+  height: 100%;
+  max-width: 500px;
+  padding: 5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+.leftPanel h1 {
+  padding: 1rem;
+}
+.description {
+  flex: 0 1 auto;
+  text-align: start;
+}
+
+.board {
+  margin: 20px;
+  flex: 0 1 auto;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  flex-flow: start;
+  align-items: stretch;
+  background-color: rgba(92, 201, 235, 0.2);
+  /* outline: 2px solid rgb(134, 154, 189); */
+  width: 500px;
+  height: 500px;
+}
+
+.row {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  flex-flow: start;
+  align-items: stretch;
+  /* height: 50px; */
+}
+
+.cell {
+  flex: 1 1 auto;
+  width: 50px;
+
+  /* outline: 1px solid rgb(134, 154, 189); */
+}
+.cell:hover {
+  box-shadow: 0 0 5px 2px rgba(253, 82, 2, 0.61), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  background-color: rgba(253, 82, 2, 0.61);
+}
+
+.liveCell {
+  background-color: rgb(8, 88, 17);
+}
+
+.controlPanel{
+  display: flex;
+  align-items: center;
+  padding-top: 5rem;
+}
+
+.instructions{
+  flex: 0 1 auto;
+  text-align: start;
+  margin: 0 20px
+}
+
+.controlBtns{
+  flex: 0 0 auto;
+  margin: 0 20px
+}

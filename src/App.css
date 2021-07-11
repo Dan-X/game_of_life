@@ -1,0 +1,22 @@
+.App {
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+
+}
+.header {
+  margin-top:20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+
+button:focus {
+  outline: 0;
+}
+
