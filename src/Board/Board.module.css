@@ -13,16 +13,14 @@
 
 .leftPanel {
   height: 100%;
-  max-width: 500px;
+  max-width: 600px;
   padding: 5rem;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
 }
-.leftPanel h1 {
-  padding: 1rem;
-}
+
 .description {
   flex: 0 1 auto;
   text-align: start;

@@ -127,16 +127,26 @@ const Board = (props: Props) => {
             how it evolves. It is Turing complete and can simulate a universal
             constructor or any other Turing machine.
           </p>
+          <p>
+            <b>rules:</b>
+            <ol>
+              <li>Any live cell with fewer than two live neighbours dies, as if by underpopulation.</li>
+              <li>Any live cell with two or three live neighbours lives on to the next generation.</li>
+              <li>Any live cell with more than three live neighbours dies, as if by overpopulation.</li>
+              <li>Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.</li>
+            </ol>
+            
+          </p>
         </div>
         
         <div className={classes.instructions}>
-          <p><b>Move Mouse In: </b>Pause Iteraction</p>
+          <p><b>Move Mouse In: </b>Pause Iteration</p>
           <p><b>Click: </b>Toggle life status</p>
-          <p><b>Click and drag: </b>Set as alive</p>
+          <p><b>Click and drag: </b>Set as live</p>
         </div>
 
         <div>
-          <p>{countAlive(board)} alive ({Math.round(countAlive(board)/(boardSize^2))}%)</p>
+          <p>{countAlive(board)} cells alive ({Math.round(countAlive(board)/(boardSize^2))}%)</p>
         </div>
         <div className={classes.controlPanel}>
         <ButtonGroup className={classes.controlBtns}>
