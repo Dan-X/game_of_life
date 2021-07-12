@@ -140,9 +140,9 @@ const Board = (props: Props) => {
         </div>
         
         <div className={classes.instructions}>
-          <p><b>Move Mouse In: </b>Pause Iteration</p>
+          <p><b>Hover on board: </b>Pause Iteration</p>
           <p><b>Click: </b>Toggle life status</p>
-          <p><b>Click and drag: </b>Set as live</p>
+          <p><b>Click and drag: </b>Set multiple cells as live</p>
         </div>
 
         <div>

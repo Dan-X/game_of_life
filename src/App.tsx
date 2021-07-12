@@ -1,5 +1,4 @@
 import Board from "./Board/Board";
-import { H1, Text } from "@blueprintjs/core";
 
 import "@blueprintjs/core/lib/css/blueprint.css";
 
