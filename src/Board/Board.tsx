@@ -128,7 +128,7 @@ const Board = (props: Props) => {
             constructor or any other Turing machine.
           </p>
           <p>
-            <b>rules:</b>
+            <b>Rules:</b>
             <ol>
               <li>Any live cell with fewer than two live neighbours dies, as if by underpopulation.</li>
               <li>Any live cell with two or three live neighbours lives on to the next generation.</li>
