@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 // import { ButtonGroup, Button, Overlay } from "@blueprintjs/core";
 
 import { Button, ButtonGroup, Divider, Flex, Heading, Link, Text } from "@chakra-ui/react";
@@ -21,10 +21,6 @@ const block = [
   [1, 1],
   [1, 1],
 ]
-
-
-
-interface Props {}
 
 const boardSize = 100;
 const cellSize = 7;
@@ -79,9 +75,7 @@ const renderPatternOnBoard = (board: BoardArray, pattern: BoardArray, rowIdx: nu
   }
   if (boardSize - cellIdx < patternWidth - centerIdxX) {
     const missingCells = patternWidth - centerIdxX - boardSize + cellIdx;
-    console.log("missing cells: ", missingCells);
     patternToRender = patternToRender.map(row => row.slice(0, -missingCells));
-    // centerIdxX = centerIdxX - missingCells;
   }
 
   patternToRender.forEach((row, patterRowIdx) => {
@@ -89,11 +83,10 @@ const renderPatternOnBoard = (board: BoardArray, pattern: BoardArray, rowIdx: nu
       newBoard[patterRowIdx+rowOffeset][patterCellIdx+cellOffset] = board[patterRowIdx+rowOffeset][patterCellIdx+cellOffset] || cell;
     })
   })
-  // console.log("newDemoBoard", [...board.map(row => [...row])])
   return newBoard;
 }
 
-const Board = (props: Props) => {
+const Board = () => {
   const { board, setBoard, setUpdating } = useBoard(
     initRandomBoard(emptyBoard),
     updateInterval
@@ -160,9 +153,7 @@ const Board = (props: Props) => {
   const mouseClickCellHandler = (rowIdx: number, cellIdx: number) => {
     if (!isPutting) {
       setCellAlive(rowIdx, cellIdx);
-      console.log("hah222a")
     }else {
-      console.log("haha")
       setBoard(prev => renderPatternOnBoard(prev, patternToPut, rowIdx, cellIdx));
       setIsPutting(false);
     }
@@ -262,7 +253,6 @@ const Board = (props: Props) => {
         style={{ width: boardSize * cellSize, height: boardSize * cellSize }}
         onMouseEnter={() => {
           setUpdating(false);
-          console.log("Mouse Enter");
         }}
         onMouseLeave={() => {
           setEnableDrawing(false);

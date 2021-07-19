@@ -1,11 +1,9 @@
 import React from "react";
 import classes from "../Board.module.css";
 
-import { useBoard, BoardArray } from "../useBoard";
-
 interface Props {
   pattern: number[][];
-  onSelect: (patternSelected: BoardArray) => void;
+  onSelect: (patternSelected: number[][]) => void;
 }
 
 const getNewPattern = (pattern: number[][]) => {
@@ -13,7 +11,7 @@ const getNewPattern = (pattern: number[][]) => {
   const numOfColumns = Math.max(...pattern.map((row) => row.length));
   const newPattern = new Array(numOfRows + 2)
     .fill(0)
-    .map((row) => new Array(numOfColumns + 2).fill(0));
+    .map((_row) => new Array(numOfColumns + 2).fill(0));
   for (let i = 0; i < numOfRows; i++) {
     for (let j = 0; j < numOfColumns; j++) {
       newPattern[i + 1][j + 1] = pattern[i][j];
@@ -23,7 +21,6 @@ const getNewPattern = (pattern: number[][]) => {
 };
 
 const cellSize = 7;
-const updateInterval = 500;
 export const PreviewBoard = (props: Props) => {
   const newPattern = getNewPattern(props.pattern);
   const numOfRows = newPattern.length;
