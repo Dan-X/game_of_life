@@ -76,18 +76,17 @@
 .controlPanel{
   display: flex;
   align-items: center;
-  padding-top: 5rem;
+  padding-top: 1rem;
 }
 
 .instructions{
   flex: 0 1 auto;
   text-align: start;
-  margin: 0 20px
+  margin: 1rem 1rem;
 }
 
 .controlBtns{
   flex: 0 0 auto;
-  margin: 0 20px
 }
 
 .overlay{
@@ -121,7 +120,7 @@
 }
 .previewCard:hover {
   /* border: 1px solid rgb(50, 155, 2); */
-  box-shadow: 0 0 5px 2px rgb(25, 75, 2, 0.3);
+  box-shadow: 0 0 10px 5px rgb(25, 75, 2, 0.3);
   /* box-sizing: border-box; */
 }
 .previewBoard {

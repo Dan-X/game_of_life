@@ -56,10 +56,10 @@ export const useBoard = (initBoard: BoardArray, updateInterval: number) => {
   const [board, setBoard] = useState<BoardArray>(initBoard);
   const [updating, setUpdating] = useState(true);
   useEffect(() => {
-    // console.log("useEffect ing")
+
     const interval = setInterval(() => {
       if (updating) {
-        // console.log("update board")
+
         setBoard((prev) => updateBoard(prev));
       }
     }, updateInterval);
