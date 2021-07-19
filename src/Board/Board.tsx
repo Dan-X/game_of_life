@@ -12,21 +12,14 @@ import {
 } from "@chakra-ui/react";
 
 import { useBoard, BoardArray } from "./useBoard";
-import { patterns, stillLifes, ossillators } from "./PatternLib/patterns";
+import { stillLifes, ossillators, spaceships, infGrowth } from "./PatternLib/patterns";
 import { PreviewBoard } from "./PatternLib/PreviewBoard";
 
 import classes from "./Board.module.css";
 
 const block = [
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-  [0, 0, 0, 0, 1, 1, 0, 0, 0, 0,],
-  [0, 0, 0, 0, 1, 1, 0, 0, 0, 0,],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+  [1, 1],
+  [1, 1],
 ]
 
 
@@ -36,7 +29,7 @@ interface Props {}
 const boardSize = 100;
 const cellSize = 7;
 const initialPopulation = 0.9;
-const updateInterval = 500;
+const updateInterval = 200;
 
 const emptyBoard = new Array(boardSize)
   .fill(0)
@@ -112,7 +105,7 @@ const Board = (props: Props) => {
   const [enableDrawing, setEnableDrawing] = useState(false);
   const [isLibOpen, setLibOpen] = useState(false);
   const [isPutting, setIsPutting] = useState(false);
-  const [patternToPut, setPatternToPut] = useState(block);
+  const [patternToPut, setPatternToPut] = useState<BoardArray>(block);
 
   const setCellAlive = (rowIdx: number, columnIdx: number) => {
     if (enableDrawing) {
@@ -251,14 +244,14 @@ const Board = (props: Props) => {
         </div>
         <div className={classes.controlPanel}>
           <ButtonGroup className={classes.controlBtns}>
-            <Button variant="light" onClick={initToRandomBoard}>
-              {"Randomize Board"}
+            <Button variant="outline" onClick={initToRandomBoard}>
+              Randomize Board
             </Button>
-            <Button variant="light" onClick={setBoardToEmpty}>
-              {"Clear Board"}
+            <Button variant="outline" onClick={setBoardToEmpty}>
+              Clear Board
             </Button>
-            <Button variant="light" onClick={libOpenHandler}>
-              Show overlay
+            <Button variant="outline" onClick={libOpenHandler}>
+              Show Pattern Library
             </Button>
           </ButtonGroup>
         </div>
@@ -311,33 +304,52 @@ const Board = (props: Props) => {
         isOpen={isLibOpen}
         onClose={libCloseHandler}
         motionPreset="none"
-        size="xl"
+        size="xl" 
+        
       >
         <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
+        <ModalContent >
+          <ModalHeader>Pattern Library</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Heading as="h4" size="md">
               Still Lifes
             </Heading>
-
             <Flex wrap='wrap'>
               {stillLifes.map((pattern, idx) => (
                 <PreviewBoard key={`stationary ${idx} `} pattern={pattern} onSelect={selectFromLibHandler}/>
               ))}
             </Flex>
+            <Divider orientation="horizontal" />
 
             <Heading as="h4" size="md">
               ossillators
             </Heading>
-
             <Flex wrap='wrap'>
               {ossillators.map((pattern, idx) => (
                 <PreviewBoard key={`stationary ${idx} `} pattern={pattern} onSelect={selectFromLibHandler}/>
               ))}
             </Flex>
             <Divider orientation="horizontal" />
+
+            <Heading as="h4" size="md">
+              Spaceships
+            </Heading>
+            <Flex wrap='wrap'>
+              {spaceships.map((pattern, idx) => (
+                <PreviewBoard key={`stationary ${idx} `} pattern={pattern} onSelect={selectFromLibHandler}/>
+              ))}
+            </Flex>
+            <Divider orientation="horizontal" />
+
+            <Heading as="h4" size="md">
+              Infinite Growth
+            </Heading>
+            <Flex wrap='wrap'>
+              {infGrowth.map((pattern, idx) => (
+                <PreviewBoard key={`stationary ${idx} `} pattern={pattern} onSelect={selectFromLibHandler}/>
+              ))}
+            </Flex>
           </ModalBody>
         </ModalContent>
       </Modal>
