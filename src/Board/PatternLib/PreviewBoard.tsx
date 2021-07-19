@@ -28,15 +28,19 @@ export const PreviewBoard = (props: Props) => {
   const newPattern = getNewPattern(props.pattern);
   const numOfRows = newPattern.length;
   const numOfColumns = Math.max(...newPattern.map((row) => row.length));
-  const { board } = useBoard(newPattern, updateInterval);
+  // const { board } = useBoard(newPattern, updateInterval);
+  const board = newPattern;
   return (
     <div
       className={classes.previewCard}
-      style={{ width: "90px", height: "90px" }}
+      // style={{ width: "90px", height: "90px" }}
+      style={{ width: numOfColumns * cellSize, height: numOfRows * cellSize }}
+
       onClick={()=> props.onSelect(props.pattern)}
     >
       <div
-        className={classes.board}
+        className={classes.previewBoard}
+        // style={{ width: "100%", height: "100%" }}
         style={{ width: numOfColumns * cellSize, height: numOfRows * cellSize }}
       >
         {board.map((row, rowIdx) => (
