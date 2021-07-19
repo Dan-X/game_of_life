@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 // import { ButtonGroup, Button, Overlay } from "@blueprintjs/core";
 
-import { Button, ButtonGroup, Divider, Flex, Heading } from "@chakra-ui/react";
+import { Button, ButtonGroup, Divider, Flex, Heading, Link, Text } from "@chakra-ui/react";
 import {
   Modal,
   ModalOverlay,
@@ -187,11 +187,11 @@ const Board = (props: Props) => {
         /> */}
 
         <div className={classes.description}>
-          <p>
-            <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life">
+          <Text>
+            <Link href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life">
               More on Wikipedia
-            </a>
-          </p>
+            </Link>
+          </Text>
           <p>
             The Game of Life, also known simply as Life, is a cellular automaton
             devised by the British mathematician John Horton Conway in 1970. It

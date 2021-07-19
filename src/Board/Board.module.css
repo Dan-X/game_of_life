@@ -14,7 +14,7 @@
 .leftPanel {
   height: 100%;
   max-width: 600px;
-  padding: 5rem;
+  padding: 2rem;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;

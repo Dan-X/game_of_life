@@ -12,12 +12,7 @@ function App() {
   return (
     <ChakraProvider>
       <div className="App">
-        {/* <div className="header">
-          <H1>Conway's Game of Life</H1>
-        </div> */}
-        <div className="mainContainer">
           <Board />
-        </div>
       </div>  
     </ChakraProvider>
     
