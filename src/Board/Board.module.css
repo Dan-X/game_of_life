@@ -27,14 +27,14 @@
 }
 
 .board {
-  margin: 20px;
+  /* margin: 20px; */
   flex: 0 1 auto;
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
   flex-flow: start;
   align-items: stretch;
-  background-color: rgba(92, 201, 235, 0.2);
+  background-color: rgb(208, 245, 255);
   /* outline: 2px solid rgb(134, 154, 189); */
   width: 500px;
   height: 500px;
@@ -50,9 +50,14 @@
   /* height: 50px; */
 }
 
+.previewCell {
+  flex: 1 1 auto;
+  /* width: 7px; */
+}
+
 .cell {
   flex: 1 1 auto;
-  width: 50px;
+  /* width: 50px; */
 
   /* outline: 1px solid rgb(134, 154, 189); */
 }
@@ -80,4 +85,38 @@
 .controlBtns{
   flex: 0 0 auto;
   margin: 0 20px
+}
+
+.overlay{
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  /* align-content: center; */
+}
+
+.libModel {
+  background-color: white;
+  width: 80%;
+  height: 700px;
+  border-radius: 5px;
+  flex: 0 0 auto;
+  padding: 2rem 4rem;
+  /* margin-top: 1000px */
+}
+
+.previewCard {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(208, 245, 255);
+  margin: 1rem;
+  padding: 0px;
+  border: 1px solid rgb(61, 61, 61);
+  border-radius: 4px;
+}
+.previewCard:hover {
+  /* border: 1px solid rgb(50, 155, 2); */
+  box-shadow: 0 0 5px 2px rgb(25, 75, 2, 0.3);
+
 }

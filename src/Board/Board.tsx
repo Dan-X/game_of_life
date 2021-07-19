@@ -1,80 +1,118 @@
 import React, { useEffect, useState } from "react";
-import { ButtonGroup, Button } from "@blueprintjs/core";
+// import { ButtonGroup, Button, Overlay } from "@blueprintjs/core";
+
+import { Button, ButtonGroup, Divider, Flex, Heading } from "@chakra-ui/react";
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalCloseButton,
+} from "@chakra-ui/react";
+
+import { useBoard, BoardArray } from "./useBoard";
+import { patterns, stillLifes, ossillators } from "./PatternLib/patterns";
+import { PreviewBoard } from "./PatternLib/PreviewBoard";
 
 import classes from "./Board.module.css";
+
+const block = [
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+  [0, 0, 0, 0, 1, 1, 0, 0, 0, 0,],
+  [0, 0, 0, 0, 1, 1, 0, 0, 0, 0,],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0,],
+]
+
+
+
 interface Props {}
 
-type BoardArray = number[][];
 const boardSize = 100;
 const cellSize = 7;
 const initialPopulation = 0.9;
 const updateInterval = 500;
+
+const emptyBoard = new Array(boardSize)
+  .fill(0)
+  .map((row) => new Array(boardSize).fill(0));
 const initRandomBoard = (board: BoardArray) => {
   return board.map((row) =>
     row.map((cell) => Math.round(Math.random() * initialPopulation))
   );
 };
-const getNextCellState = (
-  board: BoardArray,
-  rowIdx: number,
-  columnIdx: number
-) => {
-  const lenghtOfBoard = board.length;
 
-  const sumRowAbove =
-    rowIdx &&
-    (columnIdx && board[rowIdx - 1][columnIdx - 1]) +
-      board[rowIdx - 1][columnIdx] +
-      ((columnIdx + 1 < lenghtOfBoard || 0) &&
-        board[rowIdx - 1][columnIdx + 1]);
-  const sumRowSame =
-    (columnIdx && board[rowIdx][columnIdx - 1]) +
-    ((columnIdx + 1 < lenghtOfBoard || 0) && board[rowIdx][columnIdx + 1]);
-  const sumRowBelow =
-    (rowIdx + 1 < lenghtOfBoard || 0) &&
-    (columnIdx && board[rowIdx + 1][columnIdx - 1]) +
-      board[rowIdx + 1][columnIdx] +
-      ((columnIdx + 1 < lenghtOfBoard || 0) &&
-        board[rowIdx + 1][columnIdx + 1]);
-  const numberOfLiveNeighbors = sumRowAbove + sumRowSame + sumRowBelow;
+/**
+ * 
+ * @param board 
+ * @param pattern 
+ * @param rowIdx 
+ * @param cellIdx 
+ * @returns new board
+ */
+const renderPatternOnBoard = (board: BoardArray, pattern: BoardArray, rowIdx: number, cellIdx: number) => {
+  const patternWidth = pattern[0].length;
+  const patternHeight = pattern.length;
+  const boardSize = board.length;
 
-  // Any dead cell with three live neighbours becomes a live cell.
-  if (board[rowIdx][columnIdx] === 0 && numberOfLiveNeighbors === 3) return 1;
-  // Any live cell with two or three live neighbours survives.
-  if (
-    board[rowIdx][columnIdx] === 1 &&
-    (numberOfLiveNeighbors === 2 || numberOfLiveNeighbors === 3)
-  )
-    return 1;
-  // All other live cells die in the next generation. Similarly, all other dead cells stay dead.
-  return 0;
-};
+  let newBoard = [...board.map(row => [...row])];
+  let centerIdxY = Math.round(patternHeight/2) - 1;
+  let centerIdxX = Math.round(patternWidth/2) - 1;
 
-const updateBoard = (board: BoardArray) =>
-  board.map((row, rowIdx) =>
-    row.map((_cell, cellIdx) => getNextCellState(board, rowIdx, cellIdx))
-  );
+  let rowOffeset = rowIdx - centerIdxY;
+  let cellOffset = cellIdx - centerIdxX;
 
-const emptyBoard = new Array(boardSize)
-  .fill(0)
-  .map((row) => new Array(boardSize).fill(0));
+  let patternToRender = pattern;
+  if (rowOffeset < 0) {
+    const missingRows = Math.abs(rowOffeset);
+    patternToRender = patternToRender.slice(missingRows);
+    centerIdxY = centerIdxY - missingRows;
+    rowOffeset = 0;
+  }
+  if (boardSize - rowIdx < patternHeight - centerIdxY) {
+    const missingRows = (patternHeight - centerIdxY) - (boardSize - rowIdx);
+    patternToRender = patternToRender.slice(0, -missingRows);
+  }
+
+  if (cellOffset < 0) {
+    const missingCells = Math.abs(cellOffset);
+    patternToRender = patternToRender.map(row => row.slice(missingCells));
+    cellOffset = 0;
+  }
+  if (boardSize - cellIdx < patternWidth - centerIdxX) {
+    const missingCells = patternWidth - centerIdxX - boardSize + cellIdx;
+    console.log("missing cells: ", missingCells);
+    patternToRender = patternToRender.map(row => row.slice(0, -missingCells));
+    // centerIdxX = centerIdxX - missingCells;
+  }
+
+  patternToRender.forEach((row, patterRowIdx) => {
+    row.forEach((cell, patterCellIdx) => {
+      newBoard[patterRowIdx+rowOffeset][patterCellIdx+cellOffset] = board[patterRowIdx+rowOffeset][patterCellIdx+cellOffset] || cell;
+    })
+  })
+  // console.log("newDemoBoard", [...board.map(row => [...row])])
+  return newBoard;
+}
 
 const Board = (props: Props) => {
-  const [board, setBoard] = useState<BoardArray>(initRandomBoard(emptyBoard));
-  const [updating, setUpdating] = useState(true);
+  const { board, setBoard, setUpdating } = useBoard(
+    initRandomBoard(emptyBoard),
+    updateInterval
+  );
+
+  const [demoBoard, setDemoBoard] = useState<BoardArray>(emptyBoard);
+
+
   const [enableDrawing, setEnableDrawing] = useState(false);
-  useEffect(() => {
-    // console.log("useEffect ing")
-    const interval = setInterval(() => {
-      if (updating) {
-        // console.log("update board")
-        setBoard((prev) => updateBoard(prev));
-      }
-    }, updateInterval);
-    return () => {
-      clearInterval(interval);
-    };
-  }, [updating]);
+  const [isLibOpen, setLibOpen] = useState(false);
+  const [isPutting, setIsPutting] = useState(false);
+  const [patternToPut, setPatternToPut] = useState(block);
 
   const setCellAlive = (rowIdx: number, columnIdx: number) => {
     if (enableDrawing) {
@@ -83,14 +121,13 @@ const Board = (props: Props) => {
         newBoard[rowIdx][columnIdx] = 1;
         return newBoard;
       });
-    }else {
+    } else {
       setBoard((currentBoard) => {
         const newBoard = currentBoard.map((row) => [...row]);
         newBoard[rowIdx][columnIdx] = Math.abs(newBoard[rowIdx][columnIdx] - 1);
         return newBoard;
       });
     }
-    
   };
 
   const initToRandomBoard = () => {
@@ -102,16 +139,60 @@ const Board = (props: Props) => {
   };
 
   const countAlive = (board: BoardArray) => {
-    const cellReducer = (accumulator: number, currentValue: number) => accumulator + currentValue;
-    const rowReducer = (accumulator: number, currentRow: number[]) => accumulator + currentRow.reduce(cellReducer, 0);
+    const cellReducer = (accumulator: number, currentValue: number) =>
+      accumulator + currentValue;
+    const rowReducer = (accumulator: number, currentRow: number[]) =>
+      accumulator + currentRow.reduce(cellReducer, 0);
     const numAlive = board.reduce(rowReducer, 0);
     return numAlive;
+  };
+
+  const libOpenHandler = () => {
+    setUpdating(false);
+    setLibOpen(true);
+  };
+  const libCloseHandler = () => {
+    setLibOpen(false);
+    setUpdating(true);
+  };
+
+  const mouseEnterCellHandler = (rowIdx: number, cellIdx: number) => {
+    if (enableDrawing) {
+      setCellAlive(rowIdx, cellIdx);
+    }else if (isPutting) {
+      setDemoBoard(renderPatternOnBoard(board, patternToPut, rowIdx, cellIdx));
+    }
   }
 
+  const mouseClickCellHandler = (rowIdx: number, cellIdx: number) => {
+    if (!isPutting) {
+      setCellAlive(rowIdx, cellIdx);
+      console.log("hah222a")
+    }else {
+      console.log("haha")
+      setBoard(prev => renderPatternOnBoard(prev, patternToPut, rowIdx, cellIdx));
+      setIsPutting(false);
+    }
+  }
+
+  const selectFromLibHandler = (patternSelected: BoardArray) => {
+    setIsPutting(true);
+    setUpdating(false);
+    setDemoBoard(board);
+    setLibOpen(false);
+    setPatternToPut(patternSelected);
+  }
+
+
+  const boardToDisplay = isPutting? demoBoard : board;
   return (
     <div className={classes.boardContainer}>
       <div className={classes.leftPanel}>
-        <h1>Conway's Game of Life</h1>
+        <Heading as='h3' size='lg'>Conway's Game of Life</Heading>
+        {/* <PreviewBoard
+          pattern={patterns[1]}
+        /> */}
+
         <div className={classes.description}>
           <p>
             <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life">
@@ -130,36 +211,59 @@ const Board = (props: Props) => {
           <p>
             <b>Rules:</b>
             <ol>
-              <li>Any live cell with fewer than two live neighbours dies, as if by underpopulation.</li>
-              <li>Any live cell with two or three live neighbours lives on to the next generation.</li>
-              <li>Any live cell with more than three live neighbours dies, as if by overpopulation.</li>
-              <li>Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.</li>
+              <li>
+                Any live cell with fewer than two live neighbours dies, as if by
+                underpopulation.
+              </li>
+              <li>
+                Any live cell with two or three live neighbours lives on to the
+                next generation.
+              </li>
+              <li>
+                Any live cell with more than three live neighbours dies, as if
+                by overpopulation.
+              </li>
+              <li>
+                Any dead cell with exactly three live neighbours becomes a live
+                cell, as if by reproduction.
+              </li>
             </ol>
-            
           </p>
         </div>
-        
+
         <div className={classes.instructions}>
-          <p><b>Hover on board: </b>Pause Iteration</p>
-          <p><b>Click: </b>Toggle life status</p>
-          <p><b>Click and drag: </b>Set multiple cells as live</p>
+          <p>
+            <b>Hover on board: </b>Pause Iteration
+          </p>
+          <p>
+            <b>Click: </b>Toggle life status
+          </p>
+          <p>
+            <b>Click and drag: </b>Set multiple cells as live
+          </p>
         </div>
 
         <div>
-          <p>{countAlive(board)} cells alive ({Math.round(countAlive(board)/(boardSize^2))}%)</p>
+          <p>
+            {countAlive(board)} cells alive (
+            {Math.round(countAlive(board) / (boardSize ^ 2))}%)
+          </p>
         </div>
         <div className={classes.controlPanel}>
-        <ButtonGroup className={classes.controlBtns}>
-          <Button icon="refresh" onClick={initToRandomBoard}>
-            {"Randomize Board"}
-          </Button>
-          <Button icon="graph-remove" onClick={setBoardToEmpty}>
-            {"Clear Board"}
-          </Button>
-        </ButtonGroup>
+          <ButtonGroup className={classes.controlBtns}>
+            <Button variant="light" onClick={initToRandomBoard}>
+              {"Randomize Board"}
+            </Button>
+            <Button variant="light" onClick={setBoardToEmpty}>
+              {"Clear Board"}
+            </Button>
+            <Button variant="light" onClick={libOpenHandler}>
+              Show overlay
+            </Button>
+          </ButtonGroup>
+        </div>
       </div>
-      </div>
-      
+
       <div
         className={classes.board}
         style={{ width: boardSize * cellSize, height: boardSize * cellSize }}
@@ -168,34 +272,75 @@ const Board = (props: Props) => {
           console.log("Mouse Enter");
         }}
         onMouseLeave={() => {
-          setEnableDrawing(false)
-          setUpdating(true); 
+          setEnableDrawing(false);
+          setUpdating(true);
         }}
-        onMouseDown={() => setEnableDrawing(true)}
-        onMouseUp={() => setEnableDrawing(false)}
+        onMouseDown={() => {
+          if(!isPutting){
+            setEnableDrawing(true)
+          }
+        }}
+        onMouseUp={() => {
+          if(!isPutting){
+            setEnableDrawing(false)
+          }
+        }}
       >
-        {board.map((row, rowIdx) => (
+        {boardToDisplay.map((row, rowIdx) => (
           <div key={rowIdx} className={classes.row}>
             {row.map((cell, cellIdx) => (
               <div
                 key={cellIdx}
                 className={
-                  cell
+                  isPutting? (cell
+                    ? [classes.previewCell, classes.liveCell].join(" ")
+                    : classes.previewCell):
+                  (cell
                     ? [classes.cell, classes.liveCell].join(" ")
-                    : classes.cell
+                    : classes.cell)
                 }
-                onClick={() => setCellAlive(rowIdx, cellIdx)}
-                onMouseEnter={() => {
-                  if (enableDrawing) {
-                    setCellAlive(rowIdx, cellIdx);
-                  }
-                }}
+                onClick={() => mouseClickCellHandler(rowIdx, cellIdx)}
+                onMouseEnter={() => mouseEnterCellHandler(rowIdx, cellIdx)}
               ></div>
             ))}
           </div>
         ))}
       </div>
-      
+
+      <Modal
+        isOpen={isLibOpen}
+        onClose={libCloseHandler}
+        motionPreset="none"
+        size="xl"
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Modal Title</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Heading as="h4" size="md">
+              Still Lifes
+            </Heading>
+
+            <Flex wrap='wrap'>
+              {stillLifes.map((pattern, idx) => (
+                <PreviewBoard key={`stationary ${idx} `} pattern={pattern} onSelect={selectFromLibHandler}/>
+              ))}
+            </Flex>
+
+            <Heading as="h4" size="md">
+              ossillators
+            </Heading>
+
+            <Flex wrap='wrap'>
+              {ossillators.map((pattern, idx) => (
+                <PreviewBoard key={`stationary ${idx} `} pattern={pattern} onSelect={selectFromLibHandler}/>
+              ))}
+            </Flex>
+            <Divider orientation="horizontal" />
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </div>
   );
 };
