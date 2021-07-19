@@ -248,48 +248,49 @@ const Board = () => {
         </div>
       </div>
 
-      <div
-        className={classes.board}
-        style={{ width: boardSize * cellSize, height: boardSize * cellSize }}
-        onMouseEnter={() => {
-          setUpdating(false);
-        }}
-        onMouseLeave={() => {
-          setEnableDrawing(false);
-          setUpdating(true);
-        }}
-        onMouseDown={() => {
-          if(!isPutting){
-            setEnableDrawing(true)
-          }
-        }}
-        onMouseUp={() => {
-          if(!isPutting){
-            setEnableDrawing(false)
-          }
-        }}
-      >
-        {boardToDisplay.map((row, rowIdx) => (
-          <div key={rowIdx} className={classes.row}>
-            {row.map((cell, cellIdx) => (
-              <div
-                key={cellIdx}
-                className={
-                  isPutting? (cell
-                    ? [classes.previewCell, classes.liveCell].join(" ")
-                    : classes.previewCell):
-                  (cell
-                    ? [classes.cell, classes.liveCell].join(" ")
-                    : classes.cell)
-                }
-                onClick={() => mouseClickCellHandler(rowIdx, cellIdx)}
-                onMouseEnter={() => mouseEnterCellHandler(rowIdx, cellIdx)}
-              ></div>
-            ))}
-          </div>
-        ))}
+      <div className={classes.rightPanel}>
+        <div
+          className={classes.board}
+          style={{ width: boardSize * cellSize, height: boardSize * cellSize }}
+          onMouseEnter={() => {
+            setUpdating(false);
+          }}
+          onMouseLeave={() => {
+            setEnableDrawing(false);
+            setUpdating(true);
+          }}
+          onMouseDown={() => {
+            if(!isPutting){
+              setEnableDrawing(true)
+            }
+          }}
+          onMouseUp={() => {
+            if(!isPutting){
+              setEnableDrawing(false)
+            }
+          }}
+        >
+          {boardToDisplay.map((row, rowIdx) => (
+            <div key={rowIdx} className={classes.row}>
+              {row.map((cell, cellIdx) => (
+                <div
+                  key={cellIdx}
+                  className={
+                    isPutting? (cell
+                      ? [classes.previewCell, classes.liveCell].join(" ")
+                      : classes.previewCell):
+                    (cell
+                      ? [classes.cell, classes.liveCell].join(" ")
+                      : classes.cell)
+                  }
+                  onClick={() => mouseClickCellHandler(rowIdx, cellIdx)}
+                  onMouseEnter={() => mouseEnterCellHandler(rowIdx, cellIdx)}
+                ></div>
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
-
       <Modal
         isOpen={isLibOpen}
         onClose={libCloseHandler}

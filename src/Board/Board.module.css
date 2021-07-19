@@ -12,9 +12,24 @@
 }
 
 .leftPanel {
+  flex: 1 1 auto;
   height: 100%;
   max-width: 600px;
   padding: 2rem;
+  margin: 1rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+.rightPanel {
+  flex: 1 1 auto;
+  height: 100%;
+  max-width: 1000px;
+  padding: 2rem;
+  margin: 1rem;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -22,7 +37,7 @@
 }
 
 .description {
-  flex: 1 1 auto;
+  flex: 0 1 auto;
   text-align: start;
 }
 .description p {
@@ -35,6 +50,7 @@
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
+  justify-content: flex-start;
   flex-flow: start;
   align-items: stretch;
   background-color: rgb(208, 245, 255);
