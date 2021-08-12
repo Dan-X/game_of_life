@@ -5,10 +5,20 @@
   position: absolute;
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+
   /* z-index: 100; */
 }
 
+.linkGroup {
+  flex: 0 1 auto;
+  display: flex;
+  justify-content: center;
+}
 
+.linkBtn {
+  margin: 0 1rem;
+}
 button:focus {
   outline: 0;
 }
